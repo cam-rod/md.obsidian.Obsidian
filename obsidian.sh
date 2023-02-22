@@ -37,4 +37,9 @@ for i in {0..9}; do
     test -S "$XDG_RUNTIME_DIR"/"discord-ipc-$i" || ln -sf {app/com.discordapp.Discord,"$XDG_RUNTIME_DIR"}/"discord-ipc-$i";
 done
 
+export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+export GPG_TTY=$(tty)
+gpgconf --reload gpg-agent >/dev/null
+gpg-connect-agent updatestartuptty /bye >/dev/null
+
 zypak-wrapper /app/obsidian $@ ${EXTRA_ARGS[@]}

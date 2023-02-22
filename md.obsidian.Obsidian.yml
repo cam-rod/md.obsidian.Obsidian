@@ -1,15 +1,15 @@
 app-id: md.obsidian.Obsidian
-default-branch: stable
+default-branch: test
 base: org.electronjs.Electron2.BaseApp
 base-version: '22.08'
-runtime: org.freedesktop.Platform
-runtime-version: '22.08'
+runtime: org.kde.Platform
+runtime-version: '5.15'
 add-extensions:
   org.freedesktop.Sdk.Extension.texlive:
     version: '22.08'
     directory: texlive
     no-autodownload: true
-sdk: org.freedesktop.Sdk
+sdk: org.kde.Sdk
 command: obsidian.sh
 tags:
   - proprietary
@@ -18,6 +18,7 @@ finish-args:
   - --socket=wayland
   - --socket=pulseaudio
   - --socket=ssh-auth
+  - --socket=gpg-agent
   - --device=dri
   - --filesystem=home
   - --filesystem=/mnt
@@ -97,6 +98,17 @@ modules:
           url: https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/
           version-pattern: openssh-(\d+\.\d+p\d+).tar.gz
           url-template: https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-$version.tar.gz
+  - name: pinentry
+    buildsystem: autotools
+    config-opts:
+      - --prefix=${FLATPAK_DEST}
+      - --enable-maintainer-mode
+      - --enable-pinentry-qt
+    sources:
+      - type: git
+        url: https://dev.gnupg.org/source/pinentry.git
+        tag: pinentry-1.2.1
+        commit: 338961541fa9416937092d6e7720246b3cd7465a
   - name: gh
     buildsystem: simple
     build-commands:
